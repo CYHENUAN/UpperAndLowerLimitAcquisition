@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ParamsSetting xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<PressFilePath />
+	<PressStation>
+		<CollectionClass>
+			<StationName>A125</StationName>
+			<EquipmentNameOne>压机一</EquipmentNameOne>
+		</CollectionClass>
+	</PressStation>
+	<PressIsEnable>False</PressIsEnable>
+	<TightenStation>OPA010|OPA020</TightenStation>
+	<TightenIsEnable>True</TightenIsEnable>
+	<AirtightStation>OPA010|OPA020</AirtightStation>
+	<AirIsEnable>True</AirIsEnable>
+	<DeviceType>压机|拧紧枪|气密仪|</DeviceType>
+	<LogPath />
+	<LogRetentionDays>30</LogRetentionDays>
+</ParamsSetting>
