@@ -1,10 +1,9 @@
-using Acquisition.IService;
-using Acquisition.Service;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Win32;
 using UpperAndLowerLimitAcquisition.Controls;
 using UpperAndLowerLimitAcquisition.Helper;
 using UpperAndLowerLimitAcquisition.ISevices;
+using UpperAndLowerLimitAcquisition.Log;
 using UpperAndLowerLimitAcquisition.Model;
 using UpperAndLowerLimitAcquisition.Services;
 
@@ -14,7 +13,7 @@ namespace UpperAndLowerLimitAcquisition
     {
         private readonly IPanelRegistry _registry;
         private bool _isClosing = false;
-        public LogService LogService { get; private set; } // Updated to ensure initialization  
+        public LogService LogService { get; private set; }  
         public readonly ICustomLoggerService _customLoggerServic;
 
         public Form1(ICustomLoggerService customLoggerServic, IPanelRegistry registry)

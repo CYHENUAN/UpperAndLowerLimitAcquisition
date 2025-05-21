@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using MediatR;
+using UpperAndLowerLimitAcquisition.Log;
 using UpperAndLowerLimitAcquisition.Model;
 
 namespace UpperAndLowerLimitAcquisition.Services

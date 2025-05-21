@@ -1,7 +1,7 @@
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
-using UpperAndLowerLimitAcquisition.Extended;
 using UpperAndLowerLimitAcquisition.ISevices;
+using UpperAndLowerLimitAcquisition.Log;
 using UpperAndLowerLimitAcquisition.Model;
 using UpperAndLowerLimitAcquisition.Services;
 
@@ -17,22 +17,10 @@ namespace UpperAndLowerLimitAcquisition
         [STAThread]
         static void Main()
         {
-            // To customize application configuration such as set high DPI settings or default font,
-            // see https://aka.ms/applicationconfiguration.
-            // Initialize settings parameters
-            GlobalData.initParams();
+           //初始化全局参数
+            GlobalData.initParams();   
 
-            // Ensure GlobalData.LogPath and GlobalData.Params are not null
-            if (string.IsNullOrEmpty(GlobalData.LogPath))
-            {
-                throw new InvalidOperationException("GlobalData.LogPath cannot be null or empty.");
-            }
-
-            if (GlobalData.Params == null)
-            {
-                throw new InvalidOperationException("GlobalData.Params cannot be null.");
-            }
-
+            //依赖注入服务
             var services = new ServiceCollection();
             ConfigureServices(services);
 
