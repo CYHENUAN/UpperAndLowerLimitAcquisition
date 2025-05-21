@@ -45,8 +45,8 @@ namespace UpperAndLowerLimitAcquisition.Services
         {
             int count = 0;
             count += paramsSetting.PressStation.Count;
-            count += GetDeviceCount(paramsSetting.TightenStation);
-            count += GetDeviceCount(paramsSetting.AirtightStation);
+            count += GetDeviceCount(paramsSetting.TightenStation ?? "默认");
+            count += GetDeviceCount(paramsSetting.AirtightStation ?? "默认");
             return count;
         }
 

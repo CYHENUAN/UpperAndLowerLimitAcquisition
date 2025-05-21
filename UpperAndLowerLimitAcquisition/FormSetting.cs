@@ -17,13 +17,21 @@ namespace UpperAndLowerLimitAcquisition
         public FormSetting()
         {
             InitializeComponent();
-            //如果打标配置文件路径为空，则使用默认路径           
+            // 如果打标配置文件路径为空，则使用默认路径  
             this.propertyGrid1.SelectedObject = GlobalData.Params;
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            XmlSerializeHelper<ParamsSetting>.SerializeToFile(GlobalData.ParamsSettingPath, propertyGrid1.SelectedObject as ParamsSetting);
+            // 确保 propertyGrid1.SelectedObject 不为 null  
+            if (propertyGrid1.SelectedObject is ParamsSetting selectedParams)
+            {
+                XmlSerializeHelper<ParamsSetting>.SerializeToFile(GlobalData.ParamsSettingPath, selectedParams);
+            }
+            else
+            {
+                MessageBox.Show("参数设置无效，无法保存。", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
             this.Close();
         }
     }

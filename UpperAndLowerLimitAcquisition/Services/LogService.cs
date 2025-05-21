@@ -37,10 +37,11 @@ namespace UpperAndLowerLimitAcquisition.Services
             {
                 if (!msgQueue.IsEmpty)
                 {
-                    Msg msg = null;
-                    msgQueue.TryDequeue(out msg);
-                    AddLog(msg.category, msg.index, msg.str);
-                    //SaveLog(msg.str);
+                    if (msgQueue.TryDequeue(out Msg? msg) && msg != null)
+                    {
+                        AddLog(msg.category, msg.index, msg.str);
+                        //SaveLog(msg.str);
+                    }
                 }
                 else
                 {

@@ -11,7 +11,7 @@ namespace UpperAndLowerLimitAcquisition.Model
     public class CollectionClass
     {
         [Category("基本属性"), DisplayName("工站名称")]
-        public string StationName { get; set; }
+        public string? StationName { get; set; }
 
         [Category("基本属性"), DisplayName("设备名称1")]
         public string? EquipmentNameOne { get; set; }
@@ -22,7 +22,7 @@ namespace UpperAndLowerLimitAcquisition.Model
 
         public override string ToString()
         {
-            return StationName; 
+            return StationName ?? string.Empty;  
         }
     }
 }

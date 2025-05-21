@@ -11,7 +11,7 @@ namespace UpperAndLowerLimitAcquisition.Model
         public string category;
         public int index;
         public string str = string.Empty;
-
+        
         public Msg(string Cg, int i, string msg)
         {
             category = Cg;

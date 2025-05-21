@@ -262,7 +262,8 @@ namespace UpperAndLowerLimitAcquisition.Services
                 getval = Math.Round(Convert.ToDecimal(str), 4);
             }
             catch (Exception ex)
-            { 
+            {
+                Console.WriteLine(ex.Message);
             }
 
             return getval;
@@ -277,7 +278,9 @@ namespace UpperAndLowerLimitAcquisition.Services
                 getval = vals[index].Replace("\"", "");
             }
             catch (Exception ex)
-            { }
+            {
+                Console.WriteLine(ex.Message);
+            }
 
             return getval;
         }

@@ -10,6 +10,7 @@ namespace UpperAndLowerLimitAcquisition
     internal static class Program
     {
         public static IServiceProvider? ServiceProvider { get; private set; }
+
         /// <summary>
         ///  The main entry point for the application.
         /// </summary>
@@ -18,8 +19,20 @@ namespace UpperAndLowerLimitAcquisition
         {
             // To customize application configuration such as set high DPI settings or default font,
             // see https://aka.ms/applicationconfiguration.
-            //初始化设置参数
+            // Initialize settings parameters
             GlobalData.initParams();
+
+            // Ensure GlobalData.LogPath and GlobalData.Params are not null
+            if (string.IsNullOrEmpty(GlobalData.LogPath))
+            {
+                throw new InvalidOperationException("GlobalData.LogPath cannot be null or empty.");
+            }
+
+            if (GlobalData.Params == null)
+            {
+                throw new InvalidOperationException("GlobalData.Params cannot be null.");
+            }
+
             var services = new ServiceCollection();
             ConfigureServices(services);
 
@@ -32,15 +45,23 @@ namespace UpperAndLowerLimitAcquisition
 
         public static void ConfigureServices(IServiceCollection services)
         {
-            //注册窗体服务
+            // Register form services
             services.AddSingleton<Form1>();
-            //注册日志服务
-            services.AddCustomLogger(GlobalData.LogPath, GlobalData.Params.LogRetentionDays);
 
-            //分发通知
+            // Register logging service
+            if (GlobalData.LogPath != null && GlobalData.Params != null)
+            {
+                services.AddCustomLogger(GlobalData.LogPath, GlobalData.Params.LogRetentionDays);
+            }
+            else
+            {
+                throw new InvalidOperationException("GlobalData.LogPath or GlobalData.Params cannot be null.");
+            }
+
+            // Distribute notifications
             services.AddMediatR(config => config.RegisterServicesFromAssembly(typeof(AcquisitionProgressSuccessNotification).Assembly));
             services.AddMediatR(config => config.RegisterServicesFromAssembly(typeof(AcquisitionProgressFailedNotification).Assembly));
-            
+
             services.AddSingleton<IPanelRegistry, PanelRegistry>();
         }
     }

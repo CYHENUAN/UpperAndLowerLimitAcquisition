@@ -12,9 +12,9 @@ namespace UpperAndLowerLimitAcquisition.Model
     {
         public static string ParamsSettingPath { get; set; } = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ConfigFile\\ParamsSetting.xml");
 
-        public static ParamsSetting Params { get; set; }
+        public static ParamsSetting? Params { get; set; }
 
-        public static string LogPath {get; set;}
+        public static string? LogPath {get; set;}
      
         public static void initParams()
         {

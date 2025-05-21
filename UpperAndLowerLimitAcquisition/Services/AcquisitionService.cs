@@ -55,6 +55,10 @@ namespace UpperAndLowerLimitAcquisition.Services
                             await _mediator.Publish(
                                 new AcquisitionProgressFailedNotification("", total, success, failed, new List<string>() { file}),
                                 cancellationToken);
+                            //记录日志
+                            await _mediator.Publish(
+                                new AcquisitionLogNotification(EquipmentType.Press,LogLevel.Error,$"读取压机数据失败，Error:{ex.Message}"),
+                                cancellationToken);
                         }
                         else
                         {

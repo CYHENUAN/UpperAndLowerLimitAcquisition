@@ -19,8 +19,13 @@ namespace UpperAndLowerLimitAcquisition.Helper
         {
             try
             {
+                if (string.IsNullOrWhiteSpace(path))
+                {
+                    throw new ArgumentNullException(nameof(path), "路径不能为空或仅包含空白字符。");
+                }
+
                 FileInfo fi = new FileInfo(path);
-                if (!Directory.Exists(fi.DirectoryName))
+                if (!string.IsNullOrWhiteSpace(fi.DirectoryName) && !Directory.Exists(fi.DirectoryName))
                 {
                     Directory.CreateDirectory(fi.DirectoryName);
                 }
@@ -35,7 +40,6 @@ namespace UpperAndLowerLimitAcquisition.Helper
             }
             catch (Exception e)
             {
-
                 throw new Exception(e.ToString());
             }
         }
@@ -49,15 +53,28 @@ namespace UpperAndLowerLimitAcquisition.Helper
         {
             try
             {
+                if (string.IsNullOrWhiteSpace(path))
+                {
+                    throw new ArgumentNullException(nameof(path), "路径不能为空或仅包含空白字符。");
+                }
+
                 using (FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read))
                 {
                     XmlSerializer xs = new XmlSerializer(typeof(T));
-                    return xs.Deserialize(fs) as T;
+                    var result = xs.Deserialize(fs);
+                    
+                    if (result is T deserializedObject)
+                    {
+                        return deserializedObject;
+                    }
+                    else
+                    {
+                        throw new InvalidOperationException("反序列化结果不是预期的类型。");
+                    }
                 }
             }
             catch (Exception)
             {
-
                 throw;
             }
         }

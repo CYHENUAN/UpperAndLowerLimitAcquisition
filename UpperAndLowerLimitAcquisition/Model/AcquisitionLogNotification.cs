@@ -12,5 +12,12 @@ namespace UpperAndLowerLimitAcquisition.Model
         public EquipmentType EquipmentTypeInfo { get; set; }
         public LogLevel logLevel { get; set; }
         public string? Message { get; set; }
+
+        public AcquisitionLogNotification(EquipmentType equipmentTypeInfo, LogLevel logLevel, string? message)
+        {
+            EquipmentTypeInfo = equipmentTypeInfo;
+            this.logLevel = logLevel;
+            Message = message;
+        }
     }
 }
