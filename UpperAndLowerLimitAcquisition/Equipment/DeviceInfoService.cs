@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using UpperAndLowerLimitAcquisition.Helper;
 using UpperAndLowerLimitAcquisition.Model;
 
-namespace UpperAndLowerLimitAcquisition.Services
+namespace UpperAndLowerLimitAcquisition.Equipment
 {
     public class DeviceInfoService
     {
@@ -19,38 +19,7 @@ namespace UpperAndLowerLimitAcquisition.Services
             }
             //反序列化配置文件，获取配置信息
             parmars = XmlSerializeHelper<ParamsSetting>.DeSerializeFronFile(GlobalData.ParamsSettingPath);
-        }
-
-        //获取单类型设备数量
-        private int GetDeviceCount(string deviceName)
-        {
-            int count = 0;
-            if (string.IsNullOrEmpty(deviceName))
-            {
-                return count;
-            }
-            if (deviceName.Contains('|'))
-            {
-                count = deviceName.Split('|').Length;
-                return count;
-            }
-            else
-            {
-                count = 1;
-                return count;
-            }          
-        }
-        //获取多个设备的总数量
-        private int GetDevicesTotalQuantity(ParamsSetting paramsSetting)
-        {
-            int count = 0;
-            count += paramsSetting.PressStation.Count;
-            count += GetDeviceCount(paramsSetting.TightenStation ?? "默认");
-            count += GetDeviceCount(paramsSetting.AirtightStation ?? "默认");
-            return count;
-        }
-
-
+        }       
         public List<DevicesBaseInfo> GetDeviceType()
         {
             List<DevicesBaseInfo> devices = new List<DevicesBaseInfo>();
@@ -81,7 +50,7 @@ namespace UpperAndLowerLimitAcquisition.Services
                     return new DevicesBaseInfo
                     {
                         DeviceName = "压机数量",
-                        DevicesTotalQuantity = parmars.PressStation.Count,
+                        DevicesTotalQuantity = 0,
                         DeviceNormalOperation = 0,
                         DeviceFaultCount = 0,
                         DeviceDescription = "压机数采概览"
@@ -90,7 +59,7 @@ namespace UpperAndLowerLimitAcquisition.Services
                     return new DevicesBaseInfo
                     {
                         DeviceName = "拧紧枪数量",
-                        DevicesTotalQuantity = GetDeviceCount(parmars.TightenStation),
+                        DevicesTotalQuantity = 0,
                         DeviceNormalOperation = 0,
                         DeviceFaultCount = 0,
                         DeviceDescription = "拧紧枪数采概览"
@@ -99,7 +68,7 @@ namespace UpperAndLowerLimitAcquisition.Services
                     return new DevicesBaseInfo
                     {
                         DeviceName = "气密数量",
-                        DevicesTotalQuantity = GetDeviceCount(parmars.AirtightStation),
+                        DevicesTotalQuantity = 0,
                         DeviceNormalOperation = 0,
                         DeviceFaultCount = 0,
                         DeviceDescription = "气密数采概览"
@@ -109,9 +78,9 @@ namespace UpperAndLowerLimitAcquisition.Services
                         //将总设备描述添加到列表中
                          return new DevicesBaseInfo
                         {
-                            DeviceName = "数采设备种类",
-                            DeviceTypeCount = GetDeviceCount(parmars.DeviceType),
-                            DevicesTotalQuantity = GetDevicesTotalQuantity(parmars)
+                            DeviceName = "数采设备总数",
+                            DeviceTypeCount = 0,
+                            DevicesTotalQuantity = 0
                         };                      
                     }
             }

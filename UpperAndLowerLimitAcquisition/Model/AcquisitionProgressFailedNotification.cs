@@ -13,9 +13,9 @@ namespace UpperAndLowerLimitAcquisition.Model
         public int TotalCount { get;}
         public int SuccessCount { get;}
         public int FailedCount { get;}
-        public List<string> FailedFiles { get;}
+        public List<DirectoryInfo> FailedFiles { get;}
 
-        public AcquisitionProgressFailedNotification(string panelId, int total, int sucess, int fail, List<string> files)
+        public AcquisitionProgressFailedNotification(string panelId, int total, int sucess, int fail, List<DirectoryInfo> files)
         { 
             PanelId = panelId;
             TotalCount = total;

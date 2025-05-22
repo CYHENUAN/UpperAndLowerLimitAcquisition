@@ -15,7 +15,9 @@ namespace UpperAndLowerLimitAcquisition.Model
         public static ParamsSetting? Params { get; set; }
 
         public static string? LogPath {get; set;}
-     
+
+        public static Dictionary<string, UpdateLabelClass> LabelUpdates { get; set; } = new Dictionary<string, UpdateLabelClass>();
+
         public static void initParams()
         {
             //反序列化配置文件，获取配置信息

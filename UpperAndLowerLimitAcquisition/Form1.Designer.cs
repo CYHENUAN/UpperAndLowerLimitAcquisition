@@ -166,7 +166,7 @@ namespace UpperAndLowerLimitAcquisition
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Form1";
             FormClosing += MainForm_FormClosing;
-            Load += Form_Load;
+            Shown += Form_Shown;
             Resize += Form_Resize;
             tableLayoutPanel1.ResumeLayout(false);
             groupBox1.ResumeLayout(false);

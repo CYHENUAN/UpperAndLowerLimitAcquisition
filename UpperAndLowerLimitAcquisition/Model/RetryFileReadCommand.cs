@@ -9,8 +9,8 @@ namespace UpperAndLowerLimitAcquisition.Model
 {
     public class RetryFileReadCommand: IRequest
     {
-        public List<string> FailedFilesToRetry { get;}
-        public RetryFileReadCommand(List<string> files)
+        public List<DirectoryInfo> FailedFilesToRetry { get;}
+        public RetryFileReadCommand(List<DirectoryInfo> files)
         {
             FailedFilesToRetry = files;
         }

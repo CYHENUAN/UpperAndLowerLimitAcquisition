@@ -1,13 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ParamsSetting xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-	<PressFilePath />
+	<PressFilePath>C:\Projects\山东6152\qmsdata\yaji</PressFilePath>
 	<PressStation>
 		<CollectionClass>
 			<StationName>A125</StationName>
 			<EquipmentNameOne>压机一</EquipmentNameOne>
 		</CollectionClass>
 	</PressStation>
-	<PressIsEnable>False</PressIsEnable>
+	<PressIsEnable>True</PressIsEnable>
 	<TightenStation>OPA010|OPA020</TightenStation>
 	<TightenIsEnable>True</TightenIsEnable>
 	<AirtightStation>OPA010|OPA020</AirtightStation>

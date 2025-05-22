@@ -13,18 +13,23 @@ namespace UpperAndLowerLimitAcquisition.Log
         public readonly ICustomLoggerService _loggerService;
         private static ConcurrentQueue<Msg> msgQueue = new ConcurrentQueue<Msg>();
         Thread thread;     
-        private ListView Ls { get; set; }
-        public LogService(ICustomLoggerService loggerService,ListView listView)
+        private ListView? Ls { get; set; }
+        public LogService(ICustomLoggerService loggerService)
         {
-            _loggerService = loggerService;
-            Ls = listView;
+            _loggerService = loggerService;           
             thread = new Thread(WriteLog)
             {
                 IsBackground = true
             };
             thread.Start();
         }
-    
+        public void GetListView(ListView listView) => Ls = listView;
+       
+
+        public void PressLog(int index, string str) => AddMsg("press", index, str);
+        public void AirLog(int index, string str) => AddMsg("air", index, str);
+        public void Tighten(int index, string str) => AddMsg("tighten", index, str);
+
         public void AddMsg(string cg, int index, string str)
         {
             Msg msg = new Msg(cg, index, str);
@@ -51,6 +56,10 @@ namespace UpperAndLowerLimitAcquisition.Log
 
         private void AddLog(string category, int index, string info)
         {
+            if (Ls == null)
+            {
+                throw new InvalidOperationException("ListView (Ls) is not initialized.");
+            }
             if (!Ls.InvokeRequired)
             {
                 if (Ls.Items.Count > 500)
@@ -79,7 +88,7 @@ namespace UpperAndLowerLimitAcquisition.Log
                     {
                         Ls.Items.Insert(0, Lvi);
                     }));
-                }                      
+                }
             }
             else
             {
@@ -112,10 +121,8 @@ namespace UpperAndLowerLimitAcquisition.Log
                             Ls.Items.Insert(0, Lvi);
                         }));
                     }
-                }));              
+                }));
             }
         }
-
-
     }
 }

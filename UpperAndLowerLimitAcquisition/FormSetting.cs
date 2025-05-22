@@ -32,6 +32,8 @@ namespace UpperAndLowerLimitAcquisition
             {
                 MessageBox.Show("参数设置无效，无法保存。", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+            //将全局变量中的参数设置更新为最新的配置
+            GlobalData.Params = XmlSerializeHelper<ParamsSetting>.DeSerializeFronFile(GlobalData.ParamsSettingPath);
             this.Close();
         }
     }

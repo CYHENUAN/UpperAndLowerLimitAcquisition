@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Acquisition.Service", "Serv
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Acquisition.Common", "Acquisition.Common\Acquisition.Common.csproj", "{8BB6F0DC-6DB8-418A-8565-DB47AA1438E9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Acquisition.Model", "Acquisition.Model\Acquisition.Model.csproj", "{7715DD22-BA15-4CFD-A369-E265F3D7B6FE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{8BB6F0DC-6DB8-418A-8565-DB47AA1438E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8BB6F0DC-6DB8-418A-8565-DB47AA1438E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8BB6F0DC-6DB8-418A-8565-DB47AA1438E9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7715DD22-BA15-4CFD-A369-E265F3D7B6FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7715DD22-BA15-4CFD-A369-E265F3D7B6FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7715DD22-BA15-4CFD-A369-E265F3D7B6FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7715DD22-BA15-4CFD-A369-E265F3D7B6FE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

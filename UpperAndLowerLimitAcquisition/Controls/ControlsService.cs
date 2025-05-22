@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using UpperAndLowerLimitAcquisition.Services;
+using UpperAndLowerLimitAcquisition.Equipment;
+using UpperAndLowerLimitAcquisition.Model;
 
 namespace UpperAndLowerLimitAcquisition.Controls
 {
@@ -23,6 +24,7 @@ namespace UpperAndLowerLimitAcquisition.Controls
             for (int i = 0; i < ls.Count; i++)
             {
                 table.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F / table.ColumnCount));
+                
                 var panel = new Panel();
                 panel.Dock = DockStyle.Fill;
                 panel.BackColor = Color.FromArgb(50 + i * 40, 100, 200);
@@ -92,7 +94,10 @@ namespace UpperAndLowerLimitAcquisition.Controls
                 );
                 innerTable.Controls.Add(label5, 2, 1);
 
-                innerTable.ResumeLayout();
+                //获取需要更新的Label
+                GlobalData.LabelUpdates.Add(ls[i].DeviceName ?? "默认", new UpdateLabelClass(label2,label3,label5));
+
+                innerTable.ResumeLayout();          
                 panel.Controls.Add(innerTable);
                 table.Controls.Add(panel, i, 0);
             }

@@ -13,7 +13,7 @@ namespace UpperAndLowerLimitAcquisition.Services
         private readonly Label _lblTotal;
         private readonly Label _lblSuccess;
         private readonly Label _lblFailed;
-        private List<string> _failedFiles = new();
+        private List<DirectoryInfo> _failedFiles = new();
 
         public PanelUpdateProxy(string id, Label total, Label success, Label failed)
         {
@@ -38,11 +38,11 @@ namespace UpperAndLowerLimitAcquisition.Services
         }
 
 
-        public void SetFailedFiles(List<string> files)
+        public void SetFailedFiles(List<DirectoryInfo> files)
         {
             _failedFiles = files;
         }
 
-        public List<string> GetFailedFiles() => _failedFiles;
+        public List<DirectoryInfo> GetFailedFiles() => _failedFiles;
     }
 }
