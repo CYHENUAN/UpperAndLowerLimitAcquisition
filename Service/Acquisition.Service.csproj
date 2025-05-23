@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Acquisition.Common\Acquisition.Common.csproj" />
+    <ProjectReference Include="..\Acquisition.Model\Acquisition.Model.csproj" />
     <ProjectReference Include="..\IService\Acquisition.IService.csproj" />
   </ItemGroup>
 

@@ -22,6 +22,8 @@ namespace UpperAndLowerLimitAcquisition.Model
         public List<CollectionClass> PressStation { get; set; } = new List<CollectionClass>();
         [DisplayName("是否启用压机采集"), Category("压机设置")]
         public IsEnable PressIsEnable { get; set; }
+        [DisplayName("压机采集频率，默认12小时采集一次"), Category("压机设置")]
+        public int PressReadFrequency { get; set; } = 12;
 
         // -----------------拧紧枪参数设置-----------------
         [DisplayName("拧紧工站"), Category("拧紧枪参数设置")]

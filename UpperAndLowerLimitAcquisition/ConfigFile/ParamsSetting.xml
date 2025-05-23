@@ -8,6 +8,7 @@
 		</CollectionClass>
 	</PressStation>
 	<PressIsEnable>True</PressIsEnable>
+	<PressReadFrequency>12</PressReadFrequency>
 	<TightenStation>OPA010|OPA020</TightenStation>
 	<TightenIsEnable>True</TightenIsEnable>
 	<AirtightStation>OPA010|OPA020</AirtightStation>

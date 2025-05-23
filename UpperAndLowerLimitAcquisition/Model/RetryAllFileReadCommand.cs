@@ -7,11 +7,13 @@ using MediatR;
 
 namespace UpperAndLowerLimitAcquisition.Model
 {
-    public class RetryFileReadCommand: IRequest
+    public class RetryAllFileReadCommand: IRequest
     {
+        public string PanelId { get; set; }
         public List<DirectoryInfo> FailedFilesToRetry { get;}
-        public RetryFileReadCommand(List<DirectoryInfo> files)
+        public RetryAllFileReadCommand(string panelId ,List<DirectoryInfo> files)
         {
+            PanelId = panelId;
             FailedFilesToRetry = files;
         }
     }

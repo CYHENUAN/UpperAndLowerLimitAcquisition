@@ -11,5 +11,6 @@ namespace UpperAndLowerLimitAcquisition.ISevices
         string PanelId { get; }
         void UpdateLabels(int total, int success, int failed);
         void SetFailedFiles(List<DirectoryInfo> failedFiles);
+        List<DirectoryInfo> GetFailedFiles();
     }
 }

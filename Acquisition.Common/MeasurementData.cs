@@ -15,7 +15,8 @@ namespace Acquisition.Common
         /// <summary>
         /// 检测项值
         /// </summary>
-        public string? MeasurementValue { get; set; }
-      
+        public decimal MeasurementValueUSL { get; set; }
+        public decimal MeasurementValueLSL { get; set; }
+
     }
 }

@@ -5,6 +5,7 @@ using System.Runtime;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Acquisition.Common;
 using Acquisition.IService;
 using UpperAndLowerLimitAcquisition.Helper;
 using UpperAndLowerLimitAcquisition.Log;
@@ -23,7 +24,9 @@ namespace UpperAndLowerLimitAcquisition.Equipment.Press
             _logService = logService;
             _recipeService = recipeService;
         }
-        public Task<bool> TryReadFileAsync(DirectoryInfo dirinfo)
+
+        //单设备压机采集
+        public async Task<bool> TryReadFileAsync(DirectoryInfo dirinfo)
         {
             try
             {
@@ -46,16 +49,21 @@ namespace UpperAndLowerLimitAcquisition.Equipment.Press
                 
                 foreach (var dirson in dirsons)
                 {
-                    if (dirson.GetFiles().Count() == 0 && dirson.Name.IsDateTime() && dirson.Name != DateTime.Now.ToString("yyyy-MM-dd"))
-                    {//如果文件夹为空切不是今天的则删除文件夹
-                        dirson.Delete();
-                        //   Log($"压力采集{maindirname}", $"删除空文件夹{dirson.FullName}");
+                    //只保留当天的文件，不符合条件的文件删除
+                    if (dirson.Name.IsDateTime() && dirson.Name != DateTime.Now.ToString("yyyy-MM-dd"))
+                    {
+                        dirson.Delete();                    
                         continue;
                     }
-
+                    //如果当天没有采集文件，则跳过
+                    if (dirson.GetFiles().Length == 0)
+                    {
+                        _logService.PressLog(2, $"压力采集{maindirname} -> 目录{dirson.Name}下没有文件");
+                        return false;
+                    }
                     //获取每组压机最新的文件
                     //以前缀OK-A125-001分组找到每组最新的文件
-                    //提取编号部分
+                    //提取编号部分,Regex.Escape(maindirname) -> 防止动态变量含有特殊字符
                     string pattern = @$"OK-{Regex.Escape(maindirname)}-(\d{{3}})"; 
 
                     var fileGroup = dirson.GetFiles("*.csv")
@@ -65,8 +73,21 @@ namespace UpperAndLowerLimitAcquisition.Equipment.Press
                        .OrderBy(f => int.Parse(Regex.Match(f.Name, pattern).Groups[1].Value))
                        .ToList();
 
-                    foreach(var _file in fileGroup)
+                    var keepSet = fileGroup.Select(f => f.FullName).ToHashSet();
+                    //删除不符合条件的文件
+                    foreach (var file in dirson.GetFiles("*.csv"))
                     {
+                        if (!keepSet.Contains(file.FullName))
+                        {
+                            file.Delete();
+                        }
+                    }
+
+                    //创建检测项列表
+                    List<MeasurementData> measurementDatas = new List<MeasurementData>();
+                    
+                    foreach (var _file in fileGroup)
+                    {                      
                         _logService.PressLog(0, $"压力采集:{maindirname} -> 读取到{_file?.FullName}");
                         try
                         {
@@ -122,7 +143,22 @@ namespace UpperAndLowerLimitAcquisition.Equipment.Press
 
                                             if (_v_lslfocre > 0 || _v_uslfocre > 0 || _v_lslpostion > 0 || _v_uslpostion > 0)
                                             {
+                                                //获取压机输出文件序号，例如将 OK-A125-001 -> 转换成 1  代表压力，位移 为一的压机上线限值
+                                                var i = int.Parse(Regex.Match(_file.Name, pattern).Groups[1].Value); 
+                                                
+                                                measurementDatas.Add(new MeasurementData()
+                                                {
+                                                    MeasurementName = $"{i}压力",
+                                                    MeasurementValueUSL = _v_uslfocre,
+                                                    MeasurementValueLSL = _v_lslfocre,
 
+                                                });
+                                                measurementDatas.Add(new MeasurementData()
+                                                {
+                                                    MeasurementName = $"{i}位移",
+                                                    MeasurementValueUSL = _v_uslpostion,
+                                                    MeasurementValueLSL = _v_lslpostion,
+                                                });
                                                 _logService.PressLog(0, $"读取到工位{stationNumber} -> 压力上下限:{_v_lslfocre}KN ~ {_v_uslfocre} KN 位移上下限: {_v_lslpostion}mm ~ {_v_uslpostion}mm");
                                             }
                                         }
@@ -132,15 +168,11 @@ namespace UpperAndLowerLimitAcquisition.Equipment.Press
                                 strream.Close();
                                 _fileopen.Close();
                             }
-                            //移除
+                            //读取数据的文件移动到bak目录
                             var bakdir = $"{_dirpath}/bak/{_file.LastWriteTime.ToString("yyyy-MM-dd")}";
                             if (!Directory.Exists(bakdir))
                                 Directory.CreateDirectory(bakdir);
                             _file.MoveTo($"{bakdir}/" + _file.Name, true);
-
-
-                            //调用UpdateRecipeServices服务更新工站上限下限
-
                         }
                         catch (Exception ex)
                         {
@@ -154,15 +186,29 @@ namespace UpperAndLowerLimitAcquisition.Equipment.Press
                                 _logService.PressLog(2, $"压力采集{maindirname}文件目录为空，无法移动文件: {_file?.FullName}");
                             }
                             //读取失败
-                            return Task.FromResult(false);
+                            return false;
                         }
-                    }                                                   
+                    }
+                    //当采集到数据时，调用UpdateRecipeServices服务更新工站上限下限
+                    if (measurementDatas.Count > 0)
+                    {
+                        //调用UpdateRecipeServices服务更新工站上限下限
+                        bool isOk = await _recipeService.UpDateRecipeUpAndLowLimitAsync(stationNumber, measurementDatas, out string message);
+                        if (isOk)
+                        {
+                            _logService.PressLog(0, $"{stationNumber}压机上下限同步成功");
+                        }
+                        else
+                        {
+                            _logService.PressLog(2, $"{stationNumber}压机上下限同步失败；Error = {message}");
+                        }
+                    }                 
                 }
             }
             catch (Exception ex)
             {
                 _logService.PressLog(2, $"{ex.Message}|{ex.StackTrace}");
-                return Task.FromResult(false);
+                return false;
             }
             finally
             {
@@ -170,8 +216,7 @@ namespace UpperAndLowerLimitAcquisition.Equipment.Press
                 _logService.PressLog(0, $"{dirinfo.Name}压力采集结束");
             }
 
-            return Task.FromResult(true);
-
+            return true;
         }
 
         private static string _getRegexString(string pattern, string str, string rundefault = "")

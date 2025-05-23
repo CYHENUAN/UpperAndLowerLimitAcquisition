@@ -28,7 +28,10 @@ namespace UpperAndLowerLimitAcquisition.Services
         {
             int total = 0, success = 0, failed = 0;
 
-            foreach(var file in new DirectoryInfo(folderPath).GetDirectories())
+            //将读取失败的压机文件存储在列表中
+            List<DirectoryInfo> failedFiles = new List<DirectoryInfo>();
+
+            foreach (var file in new DirectoryInfo(folderPath).GetDirectories())
             {
                 //读取文件逻辑处理
                 if (cancellationToken.IsCancellationRequested)
@@ -57,9 +60,11 @@ namespace UpperAndLowerLimitAcquisition.Services
                             if (attempt == _maxRetry)
                             {
                                 failed++;
+
+                                failedFiles.Add(file);
                                 //通知更新UI
                                 await _mediator.Publish(
-                                    new AcquisitionProgressFailedNotification("press", total, success, failed, new List<DirectoryInfo>() { file }),
+                                    new AcquisitionProgressFailedNotification("press", total, success, failed, failedFiles),
                                     cancellationToken);
                                 
                                 //记录日志

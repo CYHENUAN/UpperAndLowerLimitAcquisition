@@ -53,7 +53,15 @@ namespace UpperAndLowerLimitAcquisition
                     {
                         _logService.AddMsg("System", 1, $"压机任务线程异常: {ex.Message}");
                     }
-                    await Task.Delay(1000 * 60 * 60 * 12, _mainTaskCts.Token);
+                    if(GlobalData.Params != null)
+                    {
+                        await Task.Delay(1000 * 60 * 60 * GlobalData.Params.PressReadFrequency, _mainTaskCts.Token);
+                    }
+                    else
+                    {
+                        _logService.PressLog(2, "GlobalData.Params is null, unable to read frequency.");
+                    }
+                   
                 }
             }, _mainTaskCts.Token);
         }
@@ -145,7 +153,7 @@ namespace UpperAndLowerLimitAcquisition
             }
         }
 
-        // 测试方法
+        // 测试Log输出格式
         public void test()
         {
             for (var i = 0; i < 10; i++)
