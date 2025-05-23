@@ -30,12 +30,12 @@ namespace UpperAndLowerLimitAcquisition
             _registry = registry;
             //动态添加设备概览及日志输出列表调整 
             DevicePanel.Controls.Add(new ControlsService().DeviceDynamicLayout());
-            AdjustListViewColumns();         
+            AdjustListViewColumns();
         }
         private void Form_Shown(object sender, EventArgs e)
         {
             // 启动压机任务线程
-            StartPressTaskThread();
+            //StartPressTaskThread();
         }
         // 新增方法：启动任务线程
         private void StartPressTaskThread()
@@ -53,7 +53,7 @@ namespace UpperAndLowerLimitAcquisition
                     {
                         _logService.AddMsg("System", 1, $"压机任务线程异常: {ex.Message}");
                     }
-                    if(GlobalData.Params != null)
+                    if (GlobalData.Params != null)
                     {
                         await Task.Delay(1000 * 60 * 60 * GlobalData.Params.PressReadFrequency, _mainTaskCts.Token);
                     }
@@ -61,7 +61,7 @@ namespace UpperAndLowerLimitAcquisition
                     {
                         _logService.PressLog(2, "GlobalData.Params is null, unable to read frequency.");
                     }
-                   
+
                 }
             }, _mainTaskCts.Token);
         }
@@ -170,6 +170,11 @@ namespace UpperAndLowerLimitAcquisition
             }
         }
 
-        
+        //打开详情页面
+        private void button1_Click(object sender, EventArgs e)
+        {
+            FormDetailList formDetailList = new FormDetailList();
+            formDetailList.ShowDialog();
+        }
     }
 }

@@ -65,7 +65,7 @@ namespace UpperAndLowerLimitAcquisition
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 18F));
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 82F));
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-            tableLayoutPanel1.Size = new Size(800, 450);
+            tableLayoutPanel1.Size = new Size(1000, 650);
             tableLayoutPanel1.TabIndex = 0;
             // 
             // groupBox1
@@ -74,9 +74,9 @@ namespace UpperAndLowerLimitAcquisition
             groupBox1.Controls.Add(listView1);
             groupBox1.Dock = DockStyle.Fill;
             groupBox1.Font = new Font("黑体", 9F, FontStyle.Bold, GraphicsUnit.Point, 134);
-            groupBox1.Location = new Point(5, 86);
+            groupBox1.Location = new Point(5, 122);
             groupBox1.Name = "groupBox1";
-            groupBox1.Size = new Size(790, 359);
+            groupBox1.Size = new Size(990, 523);
             groupBox1.TabIndex = 0;
             groupBox1.TabStop = false;
             groupBox1.Text = "日志";
@@ -89,7 +89,7 @@ namespace UpperAndLowerLimitAcquisition
             listView1.HeaderStyle = ColumnHeaderStyle.None;
             listView1.Location = new Point(3, 17);
             listView1.Name = "listView1";
-            listView1.Size = new Size(784, 339);
+            listView1.Size = new Size(984, 503);
             listView1.SmallImageList = imageList1;
             listView1.TabIndex = 0;
             listView1.UseCompatibleStateImageBehavior = false;
@@ -117,9 +117,9 @@ namespace UpperAndLowerLimitAcquisition
             panel1.Controls.Add(button2);
             panel1.Controls.Add(button1);
             panel1.Dock = DockStyle.Fill;
-            panel1.Location = new Point(705, 5);
+            panel1.Location = new Point(881, 5);
             panel1.Name = "panel1";
-            panel1.Size = new Size(90, 73);
+            panel1.Size = new Size(114, 109);
             panel1.TabIndex = 1;
             // 
             // button2
@@ -127,9 +127,9 @@ namespace UpperAndLowerLimitAcquisition
             button2.Anchor = AnchorStyles.Left | AnchorStyles.Right;
             button2.BackColor = SystemColors.InactiveCaption;
             button2.Font = new Font("黑体", 10.5F, FontStyle.Bold, GraphicsUnit.Point, 134);
-            button2.Location = new Point(4, 40);
+            button2.Location = new Point(4, 58);
             button2.Name = "button2";
-            button2.Size = new Size(82, 32);
+            button2.Size = new Size(106, 32);
             button2.TabIndex = 1;
             button2.Text = "参数设置";
             button2.UseVisualStyleBackColor = false;
@@ -140,12 +140,13 @@ namespace UpperAndLowerLimitAcquisition
             button1.Anchor = AnchorStyles.Left | AnchorStyles.Right;
             button1.BackColor = SystemColors.InactiveCaption;
             button1.Font = new Font("黑体", 10.5F, FontStyle.Bold, GraphicsUnit.Point, 134);
-            button1.Location = new Point(4, 3);
+            button1.Location = new Point(4, 21);
             button1.Name = "button1";
-            button1.Size = new Size(82, 32);
+            button1.Size = new Size(106, 32);
             button1.TabIndex = 0;
             button1.Text = "设备详情";
             button1.UseVisualStyleBackColor = false;
+            button1.Click += button1_Click;
             // 
             // DevicePanel
             // 
@@ -153,14 +154,14 @@ namespace UpperAndLowerLimitAcquisition
             DevicePanel.Dock = DockStyle.Fill;
             DevicePanel.Location = new Point(5, 5);
             DevicePanel.Name = "DevicePanel";
-            DevicePanel.Size = new Size(692, 73);
+            DevicePanel.Size = new Size(868, 109);
             DevicePanel.TabIndex = 2;
             // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 17F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(800, 450);
+            ClientSize = new Size(1000, 650);
             Controls.Add(tableLayoutPanel1);
             Name = "Form1";
             StartPosition = FormStartPosition.CenterScreen;

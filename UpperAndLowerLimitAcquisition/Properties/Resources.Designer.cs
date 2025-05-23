@@ -59,5 +59,25 @@ namespace UpperAndLowerLimitAcquisition.Properties {
                 resourceCulture = value;
             }
         }
+        
+        /// <summary>
+        ///   查找 System.Byte[] 类型的本地化资源。
+        /// </summary>
+        internal static byte[] Error {
+            get {
+                object obj = ResourceManager.GetObject("Error", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   查找 System.Byte[] 类型的本地化资源。
+        /// </summary>
+        internal static byte[] Sucess {
+            get {
+                object obj = ResourceManager.GetObject("Sucess", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
     }
 }

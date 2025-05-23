@@ -37,4 +37,11 @@ namespace UpperAndLowerLimitAcquisition.Model
     }
 
 
+    public enum AcquistionState
+    {
+        Sucess,
+        Failed,
+    }
+
+
 }
