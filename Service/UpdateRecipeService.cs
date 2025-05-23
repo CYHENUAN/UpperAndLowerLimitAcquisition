@@ -47,13 +47,14 @@ namespace Acquisition.Service
                         if (measurementData.MeasurementValueLSL != item.LSL)
                         {
                             item.LSL = measurementData.MeasurementValueLSL;
+                            item.EditDateTime = DateTime.Now;
                         }
                         if (measurementData.MeasurementValueUSL != item.USL)
                         {
                             item.USL = measurementData.MeasurementValueUSL;
+                            item.EditDateTime = DateTime.Now;
                         }
                     }
-
                     db.SaveChanges();
                     message = "同步上线限数据成功";
                     return Task.FromResult(true);

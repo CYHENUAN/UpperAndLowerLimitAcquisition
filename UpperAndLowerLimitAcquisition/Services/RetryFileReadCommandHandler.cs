@@ -34,7 +34,7 @@ namespace UpperAndLowerLimitAcquisition.Services
             try
             {
                 //读取逻辑暂定
-                var success = await _pressService.TryReadFileAsync(request.FailedFileToRetry);
+                var success = await _pressService.TryReadFileAsync(request.FailedFileToRetry, cancellationToken);
                 if (success)
                 {
                     await _mediator.Publish(new AcquisitionProgressSuccessNotification("", 0, 0, 0)); // 可携带具体计数
@@ -64,7 +64,7 @@ namespace UpperAndLowerLimitAcquisition.Services
                 try
                 {
                     //读取逻辑暂定
-                    var success = await _pressService.TryReadFileAsync(file);
+                    var success = await _pressService.TryReadFileAsync(file, cancellationToken);
                     if (success)
                     {
                         await _mediator.Publish(new AcquisitionProgressSuccessNotification("", 0, 0, 0)); // 可携带具体计数

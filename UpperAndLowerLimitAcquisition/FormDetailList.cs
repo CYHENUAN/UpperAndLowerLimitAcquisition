@@ -7,55 +7,38 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using UpperAndLowerLimitAcquisition.ISevices;
 using UpperAndLowerLimitAcquisition.Model;
+using UpperAndLowerLimitAcquisition.Services;
+using static System.Windows.Forms.AxHost;
 
 namespace UpperAndLowerLimitAcquisition
 {
     public partial class FormDetailList : Form
     {
+        private readonly IPanelRegistry _panelRegistry;
         public BindingList<PressDetailDto> CurrentPressDataList = new BindingList<PressDetailDto>();
-        public FormDetailList()
+        public FormDetailList(IPanelRegistry panelRegistry)
         {
             InitializeComponent();
-
-            CurrentPressDataList.Add(CreatePressDetailDto(
-                "A125",
-                "001",
-                @"C:\Projects\山东6152\qmsdata\yaji\A125\2025-05-16",
-                AcquistionState.Sucess));
-            CurrentPressDataList.Add(CreatePressDetailDto(
-               "A125",
-               "001",
-               @"C:\Projects\山东6152\qmsdata\yaji\A125\2025-05-16",
-               AcquistionState.Failed));
-        }
-
-        private void FormDetailList_Shown(object? sender, EventArgs e)
-        {
+            _panelRegistry = panelRegistry;
             PressDataGridViewTable.AutoGenerateColumns = false;
-            PressDataGridViewTable.DataSource = new BindingSource(CurrentPressDataList, null);
+            runMain();
+        }
+        private void FormDetailList_Shown(object? sender, EventArgs e)
+        {                 
             PressDataGridViewTable.CellPainting += dataGridView1_CellPainting;
             PressDataGridViewTable.CellClick += dataGridView1_CellClick;
         }
 
-        private PressDetailDto CreatePressDetailDto(string station, string equipment, string source, AcquistionState state)
+        private void runMain()
         {
-            Image icon;
-            using (var ms = new MemoryStream(state == AcquistionState.Sucess ? Properties.Resources.Sucess : Properties.Resources.Error))
-            {
-                icon = Image.FromStream(ms);
-            }
-            return new PressDetailDto
-            {
-                StationName = station,
-                EquimentName = equipment,
-                FailFileSource = source,
-                State = state,
-                Icon = icon
-            };
+            //将当前DataListView注册到面板注册表中
+            _panelRegistry.RegisterListView("PressDataGridViewTable", new UpdateListViewService(PressDataGridViewTable));
         }
+    
 
-        // Updated method to handle potential null reference issue
+        // 根据不同的状态设置不同的按钮颜色和文本
         private void dataGridView1_CellPainting(object? sender, DataGridViewCellPaintingEventArgs e)
         {
             int buttonColIndex = 4;
@@ -113,14 +96,29 @@ namespace UpperAndLowerLimitAcquisition
             {
                 var dto = PressDataGridViewTable.Rows[e.RowIndex].DataBoundItem as PressDetailDto;
 
-                if (dto?.State == AcquistionState.Sucess)
+                if (dto == null)
                 {
-                    // Disable click
                     return;
                 }
 
-                // Executable state switching logic
-                MessageBox.Show($"Switching state: {dto?.StationName}");
+                if (dto.State == AcquistionState.Sucess)
+                {
+                    // 已完成操作禁用点击操作
+                    return;
+                }
+                
+                // 更新图标
+                Image icon;
+                using (var ms = new MemoryStream(dto.State == AcquistionState.Sucess ? Properties.Resources.Sucess : Properties.Resources.Error))
+                {
+                    icon = Image.FromStream(ms);
+                }
+                dto.Icon = icon;
+
+                PressDataGridViewTable.Refresh(); // 手动刷新显示
+
+                // 执行点击操作
+                MessageBox.Show($"Switching state: {dto.StationName}");
             }
         }
     }

@@ -10,16 +10,28 @@ namespace UpperAndLowerLimitAcquisition.Services
     public class PanelRegistry : IPanelRegistry
     {
         private readonly Dictionary<string, ILabelPanelUpdater> _panels = new();
+        private readonly Dictionary<string, IUpdateListViewService> _dataListView = new();
         public ILabelPanelUpdater? GetPanel(string panelId)
         {
             _panels.TryGetValue(panelId, out var panel);
             return panel;
+        }
+        public IUpdateListViewService? GetListView(string panelId)
+        {
+            _dataListView.TryGetValue(panelId, out var dataGridView);
+            return dataGridView;
         }
 
         public void RegisterPanel(string panelId, ILabelPanelUpdater panel)
         {
             if (!_panels.ContainsKey(panelId))
                 _panels[panelId] = panel;
+        }
+
+        public void RegisterListView(string panelId, IUpdateListViewService dataGridView)
+        {
+            if (!_dataListView.ContainsKey(panelId))
+                _dataListView[panelId] = dataGridView;
         }
 
         public void UnregisterPanel(string panelId)

@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,6 +14,7 @@ namespace UpperAndLowerLimitAcquisition
 {
     public partial class Form1 : Form
     {
+        private readonly IServiceProvider _serviceProvider;
         private readonly IPanelRegistry _registry;
         private bool _isClosing = false;
         public CancellationToken token = new CancellationToken();
@@ -20,10 +22,11 @@ namespace UpperAndLowerLimitAcquisition
         public readonly AcquisitionService _acquisitionService;
         private CancellationTokenSource? _mainTaskCts;
         private Task? _mainTask;
-
-        public Form1(LogService logService, AcquisitionService acquisitionService, IPanelRegistry registry)
+        private FormDetailList FormDetailList;
+        public Form1(IServiceProvider serviceProvider,LogService logService, AcquisitionService acquisitionService, IPanelRegistry registry)
         {
             InitializeComponent();
+            _serviceProvider = serviceProvider;
             _logService = logService;
             _logService.GetListView(listView1);
             _acquisitionService = acquisitionService;
@@ -31,11 +34,13 @@ namespace UpperAndLowerLimitAcquisition
             //动态添加设备概览及日志输出列表调整 
             DevicePanel.Controls.Add(new ControlsService().DeviceDynamicLayout());
             AdjustListViewColumns();
+            //实例化listView面板
+            FormDetailList = _serviceProvider.GetRequiredService<FormDetailList>();
         }
         private void Form_Shown(object sender, EventArgs e)
         {
             // 启动压机任务线程
-            //StartPressTaskThread();
+            StartPressTaskThread();
         }
         // 新增方法：启动任务线程
         private void StartPressTaskThread()
@@ -173,8 +178,7 @@ namespace UpperAndLowerLimitAcquisition
         //打开详情页面
         private void button1_Click(object sender, EventArgs e)
         {
-            FormDetailList formDetailList = new FormDetailList();
-            formDetailList.ShowDialog();
+            FormDetailList.ShowDialog();
         }
     }
 }

@@ -40,6 +40,7 @@ namespace UpperAndLowerLimitAcquisition
         {
             // Register form services
             services.AddSingleton<Form1>();
+            services.AddSingleton<FormDetailList>();
             services.AddSingleton<LogService>();
             services.AddSingleton<AcquisitionService>();
             services.AddSingleton<ILabelPanelUpdater, PanelUpdateProxy>();

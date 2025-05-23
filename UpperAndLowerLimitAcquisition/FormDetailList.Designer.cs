@@ -224,7 +224,8 @@
         private DataGridViewTextBoxColumn StationName;
         private DataGridViewTextBoxColumn EquimentName;
         private DataGridViewTextBoxColumn FailFileSource;
-        private DataGridViewImageColumn Icon;
+        // Add the 'new' keyword to explicitly hide the inherited member 'Form.Icon'
+        private new DataGridViewImageColumn Icon;
         private DataGridViewButtonColumn Retry;
     }
 }

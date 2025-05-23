@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Runtime;
 using System.Text;
@@ -7,6 +8,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Acquisition.Common;
 using Acquisition.IService;
+using MediatR;
 using UpperAndLowerLimitAcquisition.Helper;
 using UpperAndLowerLimitAcquisition.Log;
 using UpperAndLowerLimitAcquisition.Model;
@@ -15,18 +17,20 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 namespace UpperAndLowerLimitAcquisition.Equipment.Press
 {
     public class PressService
-    {
-        static Dictionary<string, string> _stationmappDict = new Dictionary<string, string>();
+    {      
         private readonly LogService _logService;
         private readonly IUpdateRecipeService _recipeService;
-        public PressService(LogService logService, IUpdateRecipeService recipeService)
+        private readonly IMediator _mediator;
+       
+        public PressService(LogService logService, IUpdateRecipeService recipeService, IMediator mediator)
         {
             _logService = logService;
             _recipeService = recipeService;
+            _mediator = mediator;
         }
 
         //单设备压机采集
-        public async Task<bool> TryReadFileAsync(DirectoryInfo dirinfo)
+        public async Task<bool> TryReadFileAsync(DirectoryInfo dirinfo, CancellationToken cancellationToken)
         {
             try
             {
@@ -202,7 +206,11 @@ namespace UpperAndLowerLimitAcquisition.Equipment.Press
                         {
                             _logService.PressLog(2, $"{stationNumber}压机上下限同步失败；Error = {message}");
                         }
-                    }                 
+                    }
+
+                    //新增数据到列表
+                    await _mediator.Publish(new DataListViewNotification("PressDataGridViewTable", stationNumber, maindirname, _dirpath, AcquistionState.Sucess), cancellationToken);
+
                 }
             }
             catch (Exception ex)

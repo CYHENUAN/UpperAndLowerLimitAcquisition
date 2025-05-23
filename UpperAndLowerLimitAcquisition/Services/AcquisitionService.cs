@@ -44,7 +44,7 @@ namespace UpperAndLowerLimitAcquisition.Services
                 {
                     try
                     {
-                        var IsReadSuccess = await _pressService.TryReadFileAsync(file);
+                        var IsReadSuccess = await _pressService.TryReadFileAsync(file,cancellationToken);
                         if (IsReadSuccess)
                         {
                             success++;
