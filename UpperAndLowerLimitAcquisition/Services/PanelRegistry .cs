@@ -8,9 +8,9 @@ using UpperAndLowerLimitAcquisition.ISevices;
 namespace UpperAndLowerLimitAcquisition.Services
 {
     public class PanelRegistry : IPanelRegistry
-    {
+    {       
         private readonly Dictionary<string, ILabelPanelUpdater> _panels = new();
-        private readonly Dictionary<string, IUpdateListViewService> _dataListView = new();
+        private readonly Dictionary<string, IUpdateListViewService> _dataListView = new();   
         public ILabelPanelUpdater? GetPanel(string panelId)
         {
             _panels.TryGetValue(panelId, out var panel);

@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using MediatR;
 using UpperAndLowerLimitAcquisition.ISevices;
 using UpperAndLowerLimitAcquisition.Model;
 using UpperAndLowerLimitAcquisition.Services;
@@ -17,17 +18,22 @@ namespace UpperAndLowerLimitAcquisition
     public partial class FormDetailList : Form
     {
         private readonly IPanelRegistry _panelRegistry;
-        public BindingList<PressDetailDto> CurrentPressDataList = new BindingList<PressDetailDto>();
-        public FormDetailList(IPanelRegistry panelRegistry)
+        private readonly IMediator _mediator;
+        public FormDetailList(IPanelRegistry panelRegistry, IMediator mediator)
         {
             InitializeComponent();
             _panelRegistry = panelRegistry;
+            _mediator = mediator;
             PressDataGridViewTable.AutoGenerateColumns = false;
             runMain();
         }
         private void FormDetailList_Shown(object? sender, EventArgs e)
-        {                 
+        {
+            //窗体打开时先取消事件绑定
+            //防止每次打开数据列表窗体时都重新绑定事件，导致重复绑定
+            PressDataGridViewTable.CellPainting -= dataGridView1_CellPainting;
             PressDataGridViewTable.CellPainting += dataGridView1_CellPainting;
+            PressDataGridViewTable.CellClick -= dataGridView1_CellClick;
             PressDataGridViewTable.CellClick += dataGridView1_CellClick;
         }
 
@@ -106,19 +112,11 @@ namespace UpperAndLowerLimitAcquisition
                     // 已完成操作禁用点击操作
                     return;
                 }
-                
-                // 更新图标
-                Image icon;
-                using (var ms = new MemoryStream(dto.State == AcquistionState.Sucess ? Properties.Resources.Sucess : Properties.Resources.Error))
-                {
-                    icon = Image.FromStream(ms);
-                }
-                dto.Icon = icon;
 
-                PressDataGridViewTable.Refresh(); // 手动刷新显示
-
-                // 执行点击操作
-                MessageBox.Show($"Switching state: {dto.StationName}");
+                var failFileSourceDirectory = new DirectoryInfo(dto.FailFileSource ?? string.Empty);
+                _ = _mediator.Send(new RetrySingeFileReadCommand("press", GlobalData.TotalCount, GlobalData.SuccessCount, GlobalData.FailedCount, failFileSourceDirectory));
+          
+                PressDataGridViewTable.Refresh();            
             }
         }
     }

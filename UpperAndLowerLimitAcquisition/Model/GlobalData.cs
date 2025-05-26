@@ -16,6 +16,10 @@ namespace UpperAndLowerLimitAcquisition.Model
 
         public static string? LogPath {get; set;}
 
+        public static int TotalCount { get; set; } 
+        public static int SuccessCount { get; set; }
+        public static int FailedCount { get; set; }
+
         public static Dictionary<string, UpdateLabelClass> LabelUpdates { get; set; } = new Dictionary<string, UpdateLabelClass>();
 
         public static void initParams()

@@ -37,7 +37,7 @@ namespace UpperAndLowerLimitAcquisition.Services
                 if (cancellationToken.IsCancellationRequested)
                     break;
 
-                total++;         
+                total++;            
                 
                 //读取失败重试
                 for (int attempt = 1; attempt <= _maxRetry; attempt++)
@@ -48,7 +48,7 @@ namespace UpperAndLowerLimitAcquisition.Services
                         if (IsReadSuccess)
                         {
                             success++;
-
+                           
                             //通知更新UI
                             await _mediator.Publish(
                                 new AcquisitionProgressSuccessNotification("press", total, success, failed),
@@ -99,7 +99,15 @@ namespace UpperAndLowerLimitAcquisition.Services
                             cancellationToken);
                     }
                 }                
-            }           
+            }
+
+            //将总数记录到全局变量
+            GlobalData.TotalCount = total;
+            //将成功数记录到全局变量
+            GlobalData.SuccessCount = success;
+            //将失败数记录到全局变量
+            GlobalData.FailedCount = failed;
+
         }
     }
 }

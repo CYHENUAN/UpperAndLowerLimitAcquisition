@@ -11,7 +11,7 @@ using UpperAndLowerLimitAcquisition.Model;
 
 namespace UpperAndLowerLimitAcquisition.Services
 {
-    public class RetryFileReadCommandHandler: IRequest<RetryAllFileReadCommand>, IRequest<RetrySingeFileReadCommand>
+    public class RetryFileReadCommandHandler: IRequestHandler<RetryAllFileReadCommand, Unit>, IRequestHandler<RetrySingeFileReadCommand, Unit>
     {
         private readonly IMediator _mediator;
         private readonly PressService _pressService;
@@ -25,28 +25,41 @@ namespace UpperAndLowerLimitAcquisition.Services
 
         ///处理单个文件重试读取命令
         public async Task<Unit> Handle(RetrySingeFileReadCommand request, CancellationToken cancellationToken)
-        {
-           
-             
-
-
-
+        {                 
             try
             {
+                
                 //读取逻辑暂定
                 var success = await _pressService.TryReadFileAsync(request.FailedFileToRetry, cancellationToken);
+                int total = request.TotalCount;
+                int sucess = request.SuccessCount;
+                int fail = request.FailedCount;
                 if (success)
-                {
-                    await _mediator.Publish(new AcquisitionProgressSuccessNotification("", 0, 0, 0)); // 可携带具体计数
+                {                              
+                    //读取成功后，更新面板状态 ->  成功数 + 1， 失败数 - 1
+                    sucess++;
+                    fail--;
+                    await _mediator.Publish(new AcquisitionProgressSuccessNotification(request.PanelId, total, sucess, fail));
+
+                    //输出日志
+                    await _mediator.Publish(
+                                new AcquisitionLogNotification(EquipmentType.Press, LogLevel.Info, $"{request.FailedFileToRetry} -> 重试同步上下限成功; 当前同步成功数:{sucess}, 失败数：{fail}"),
+                                cancellationToken);
                 }
                 else
                 {
-                    await _mediator.Publish(new AcquisitionProgressFailedNotification("", 0, 0, 0, new List<DirectoryInfo> {request.FailedFileToRetry }));
+                    //输出日志
+                    await _mediator.Publish(
+                                new AcquisitionLogNotification(EquipmentType.Press, LogLevel.Error, $"{request.FailedFileToRetry} -> 重试同步上下限失败"),
+                                cancellationToken);
                 }
             }
             catch
             {
-                await _mediator.Publish(new AcquisitionProgressFailedNotification("", 0, 0, 0, new List<DirectoryInfo> {request.FailedFileToRetry }));
+                //输出日志
+                await _mediator.Publish(
+                            new AcquisitionLogNotification(EquipmentType.Press, LogLevel.Error, $"{request.FailedFileToRetry} -> 重试同步上下限失败"),
+                            cancellationToken);
             }
             return Unit.Value;
         }

@@ -63,11 +63,15 @@ namespace UpperAndLowerLimitAcquisition
             {
                 config.RegisterServicesFromAssemblyContaining<AcquisitionProgressSuccessNotification>();
                 config.RegisterServicesFromAssemblyContaining<AcquisitionProgressFailedNotification>();
+                config.RegisterServicesFromAssemblyContaining<RetryAllFileReadCommand>();
+                config.RegisterServicesFromAssemblyContaining<RetrySingeFileReadCommand>();
             });
 
             // 注册进度通知处理器（同一个 handler 处理两个通知）
             services.AddSingleton<INotificationHandler<AcquisitionProgressSuccessNotification>, AcquisitionProgressHandler>();
             services.AddSingleton<INotificationHandler<AcquisitionProgressFailedNotification>, AcquisitionProgressHandler>();
+            services.AddSingleton<IRequestHandler<RetryAllFileReadCommand, Unit>, RetryFileReadCommandHandler>();
+            services.AddSingleton<IRequestHandler<RetrySingeFileReadCommand, Unit>, RetryFileReadCommandHandler>();          
         }   
     }
 }
