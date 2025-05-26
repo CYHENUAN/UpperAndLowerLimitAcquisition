@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,7 +12,7 @@ namespace UpperAndLowerLimitAcquisition.Services
 {
     public class AcquisitionProgressHandler: INotificationHandler<AcquisitionProgressSuccessNotification>,INotificationHandler<AcquisitionProgressFailedNotification>, INotificationHandler<DataListViewNotification>
     {
-        private readonly IPanelRegistry _registry;      
+        private readonly IPanelRegistry _registry;
         public AcquisitionProgressHandler(IPanelRegistry registry)
         {
             _registry = registry;
@@ -33,20 +34,17 @@ namespace UpperAndLowerLimitAcquisition.Services
 
         public Task Handle(DataListViewNotification notification, CancellationToken cancellationToken)
         {
+            if (notification.PanelId == null)
+            {
+                throw new ArgumentNullException(nameof(notification.PanelId), "PanelId cannot be null.");
+            }
             var listView = _registry.GetListView(notification.PanelId);
-            if (notification.StationName == null || notification.EquimentName == null || notification.FailFileSource == null)
+            if (listView == null)
             {
-                throw new ArgumentNullException("StationName, EquimentName, and FailFileSource cannot be null.");
-            }
-
-            var pressListData = listView?.CreatePressDetailDto(notification.StationName, notification.EquimentName, notification.FailFileSource, notification.State);
-
-            if (pressListData == null)
-            {
-                throw new InvalidOperationException("CreatePressDetailDto returned null.");
-            }
-            listView?.SetListViewList(pressListData);
-            listView?.UpdateListView();
+                throw new InvalidOperationException($"No ListView found for PanelId: {notification.PanelId}");
+            }               
+            listView.SetListViewList(notification.PressDetailDtos);
+            listView.UpdateListView();
             return Task.CompletedTask;
         }
 

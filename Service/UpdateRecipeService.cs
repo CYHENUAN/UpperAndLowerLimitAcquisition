@@ -16,7 +16,12 @@ namespace Acquisition.Service
             message = string.Empty;
             if (string.IsNullOrEmpty(stationNumber))
             {
-                message = "同步上线限数据的工位不能为空";
+                message = "同步上下限数据的工位不能为空";
+                return Task.FromResult(false);
+            }
+            if(measureMentDatas.Count == 0)
+            {
+                message = "同步上下限数据的检测项不能为空";
                 return Task.FromResult(false);
             }
             using (MyDbContext db = new MyDbContext())
@@ -55,13 +60,13 @@ namespace Acquisition.Service
                             item.EditDateTime = DateTime.Now;
                         }
                     }
-                    db.SaveChanges();
-                    message = "同步上线限数据成功";
+                    db.SaveChangesAsync();
+                    message = "同步上下限数据成功";
                     return Task.FromResult(true);
                 }
                 catch
                 {
-                    message = "同步上线限数据失败";
+                    message = "同步上下限数据失败";
                     return Task.FromResult(false);
                 }
             }

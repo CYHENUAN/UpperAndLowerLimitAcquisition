@@ -65,17 +65,17 @@ namespace UpperAndLowerLimitAcquisition.Services
                                 //通知更新UI
                                 await _mediator.Publish(
                                     new AcquisitionProgressFailedNotification("press", total, success, failed, failedFiles),
-                                    cancellationToken);
-                                
-                                //记录日志
-                                await _mediator.Publish(
-                                    new AcquisitionLogNotification(EquipmentType.Press, LogLevel.Error, $"{file.Name}压机数据读取失败，正在进行第{attempt}次重新读取尝试"),
-                                    cancellationToken);
+                                    cancellationToken);                                                             
                             }
                             else
                             {
                                 await Task.Delay(_retryDelayMs, cancellationToken);
                             }
+
+                            //记录日志
+                            await _mediator.Publish(
+                                new AcquisitionLogNotification(EquipmentType.Press, LogLevel.Error, $"{file.Name}压机数据读取失败，正在进行第{attempt}次重新读取尝试"),
+                                cancellationToken);
                         }                                          
                     }
                     catch (Exception ex)
@@ -86,16 +86,17 @@ namespace UpperAndLowerLimitAcquisition.Services
                             //通知更新UI
                             await _mediator.Publish(
                                 new AcquisitionProgressFailedNotification("", total, success, failed, new List<DirectoryInfo>() { file}),
-                                cancellationToken);
-                            //记录日志
-                            await _mediator.Publish(
-                                new AcquisitionLogNotification(EquipmentType.Press,LogLevel.Error,$"读取压机数据失败，Error:{ex.Message}"),
-                                cancellationToken);
+                                cancellationToken);                        
                         }
                         else
                         {
                             await Task.Delay(_retryDelayMs, cancellationToken);
                         }
+
+                        //记录日志
+                        await _mediator.Publish(
+                            new AcquisitionLogNotification(EquipmentType.Press, LogLevel.Error, $"读取压机数据失败，Error:{ex.Message}"),
+                            cancellationToken);
                     }
                 }                
             }           

@@ -10,19 +10,13 @@ namespace UpperAndLowerLimitAcquisition.Model
 {
     public class DataListViewNotification: INotification
     {
-        public string PanelId { get;}
-        public string? StationName { get; }
-        public string? EquimentName { get;}
-        public string? FailFileSource { get; }
-        public Image? Icon { get; }
-        public AcquistionState State { get;}       
-        public DataListViewNotification(string panelId, string stationName, string equimentMent, string failFileSource, AcquistionState state)
-        {
-            PanelId = panelId;
-            StationName = stationName;
-            EquimentName = equimentMent;
-            FailFileSource = failFileSource;
-            State = state;
-        }
+        public string? PanelId { get; set; }
+        public string? StationName { get; set; }
+        public string? EquimentName { get; set; }
+        public string? FailFileSource { get; set; }
+        public Image? Icon { get; set; }
+        public AcquistionState State { get; set; }
+        public BindingList<PressDetailDto> PressDetailDtos = new BindingList<PressDetailDto>();
+       
     }
 }

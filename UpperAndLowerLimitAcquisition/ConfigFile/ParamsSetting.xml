@@ -13,7 +13,7 @@
 	<TightenIsEnable>True</TightenIsEnable>
 	<AirtightStation>OPA010|OPA020</AirtightStation>
 	<AirIsEnable>True</AirIsEnable>
-	<DeviceType>压机|拧紧枪|气密仪|</DeviceType>
+	<DeviceType>压机|拧紧枪|气密仪</DeviceType>
 	<LogPath />
 	<LogRetentionDays>30</LogRetentionDays>
 </ParamsSetting>

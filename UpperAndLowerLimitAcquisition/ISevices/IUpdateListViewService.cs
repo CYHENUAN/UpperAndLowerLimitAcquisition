@@ -12,7 +12,7 @@ namespace UpperAndLowerLimitAcquisition.ISevices
     {
         public BindingList<PressDetailDto> pressDetails { get; set; }
         void UpdateListView();
-        void SetListViewList(PressDetailDto pressDetailDtos);
+        void SetListViewList(BindingList<PressDetailDto> pressDetailDtos);
         PressDetailDto CreatePressDetailDto(string station, string equipment, string source, AcquistionState state);
 
     }

@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using UpperAndLowerLimitAcquisition.ISevices;
 using UpperAndLowerLimitAcquisition.Model;
 
@@ -18,14 +19,20 @@ namespace UpperAndLowerLimitAcquisition.Services
         {
             dataGridView = dataGrid;
         }
-        public void SetListViewList(PressDetailDto pressDetailDtos)
+        public void SetListViewList(BindingList<PressDetailDto> pressDetailDtos)
         {
-            pressDetails.Add(pressDetailDtos);
+            pressDetails = pressDetailDtos;
         }
 
         public void UpdateListView()
         {
+            // 如果在UI线程外调用，则使用Invoke方法来更新UI
+            if (dataGridView.InvokeRequired)
+            {
+                dataGridView.Invoke(() => UpdateListView());
+            }
             dataGridView.DataSource = pressDetails;
+            
         }
 
         public PressDetailDto CreatePressDetailDto(string station, string equipment, string source, AcquistionState state)
