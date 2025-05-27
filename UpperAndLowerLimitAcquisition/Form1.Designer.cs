@@ -163,6 +163,7 @@ namespace UpperAndLowerLimitAcquisition
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(950, 600);
             Controls.Add(tableLayoutPanel1);
+            Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "Form1";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "设备数采";

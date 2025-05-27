@@ -72,9 +72,9 @@ namespace Acquisition.Service
                     message = "同步上下限数据成功";
                     return (true, message);
                 }
-                catch
+                catch(Exception ex)
                 {
-                    message = "同步上下限数据失败";
+                    message = $"同步上下限数据失败 -> {ex.Message}";
                     return (false, message);
                 }
             }
