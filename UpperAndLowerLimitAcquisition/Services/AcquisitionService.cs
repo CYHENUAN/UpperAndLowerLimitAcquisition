@@ -65,7 +65,10 @@ namespace UpperAndLowerLimitAcquisition.Services
                                 //通知更新UI
                                 await _mediator.Publish(
                                     new AcquisitionProgressFailedNotification("press", total, success, failed, failedFiles),
-                                    cancellationToken);                                                             
+                                    cancellationToken);
+                                
+                                //重试三次都失败直接返回，防止输出多余重试次数日志而后没有读取的下文;
+                                return;
                             }
                             else
                             {
@@ -74,7 +77,7 @@ namespace UpperAndLowerLimitAcquisition.Services
 
                             //记录日志
                             await _mediator.Publish(
-                                new AcquisitionLogNotification(EquipmentType.Press, LogLevel.Error, $"{file.Name}压机数据读取失败，正在进行第{attempt}次重新读取尝试"),
+                                new AcquisitionLogNotification(EquipmentType.Press, LogLevel.Error, $"{file.Name}压机数据读取失败，正在进行第{attempt + 1}次重新读取尝试"),
                                 cancellationToken);
                         }                                          
                     }
