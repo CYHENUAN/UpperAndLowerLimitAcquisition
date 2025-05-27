@@ -9,6 +9,6 @@ namespace Acquisition.IService
 {
     public interface IUpdateRecipeService
     {
-        Task<bool> UpDateRecipeUpAndLowLimitAsync(string stationNumber, List<MeasurementData> measurementDatas, out string message);
+        Task<(bool isSuccess, string message)> UpDateRecipeUpAndLowLimitAsync(string stationNumber, List<MeasurementData> measurementDatas);
     }
 }

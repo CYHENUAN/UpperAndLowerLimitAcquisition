@@ -190,7 +190,7 @@ namespace UpperAndLowerLimitAcquisition.Equipment.Press
                     }
                 }
                 //调用UpdateRecipeServices服务更新工站上限下限
-                bool isOk = await _recipeService.UpDateRecipeUpAndLowLimitAsync(stationNumber, measurementDatas, out string message);
+                (bool isOk, string message) = await _recipeService.UpDateRecipeUpAndLowLimitAsync(stationNumber, measurementDatas);
                 if (isOk)
                 {
                     _logService.PressLog(0, $"{stationNumber}压机上下限同步成功");

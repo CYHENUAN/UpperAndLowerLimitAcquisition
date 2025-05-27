@@ -1,7 +1,10 @@
+using System.Configuration;
 using System.Text;
 using Acquisition.IService;
+using Acquisition.Model.MyDbContext;
 using Acquisition.Service;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using UpperAndLowerLimitAcquisition.Equipment.Press;
 using UpperAndLowerLimitAcquisition.ISevices;
@@ -71,7 +74,13 @@ namespace UpperAndLowerLimitAcquisition
             services.AddSingleton<INotificationHandler<AcquisitionProgressSuccessNotification>, AcquisitionProgressHandler>();
             services.AddSingleton<INotificationHandler<AcquisitionProgressFailedNotification>, AcquisitionProgressHandler>();
             services.AddSingleton<IRequestHandler<RetryAllFileReadCommand, Unit>, RetryFileReadCommandHandler>();
-            services.AddSingleton<IRequestHandler<RetrySingeFileReadCommand, Unit>, RetryFileReadCommandHandler>();          
+            services.AddSingleton<IRequestHandler<RetrySingeFileReadCommand, Unit>, RetryFileReadCommandHandler>();
+            //连接数据库
+            string connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+            services.AddDbContextFactory<MyDbContext>(options =>
+            {
+                options.UseSqlServer(connectionString);
+            });
         }   
     }
 }

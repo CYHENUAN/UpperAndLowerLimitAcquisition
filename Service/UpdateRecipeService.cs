@@ -6,39 +6,47 @@ using System.Threading.Tasks;
 using Acquisition.Common;
 using Acquisition.IService;
 using Acquisition.Model.MyDbContext;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 
 namespace Acquisition.Service
 {
     public class UpdateRecipeService : IUpdateRecipeService
     {
-        public Task<bool> UpDateRecipeUpAndLowLimitAsync(string stationNumber, List<MeasurementData> measureMentDatas, out string message)
+        private readonly IDbContextFactory<MyDbContext> _dbContextFactory;
+        public UpdateRecipeService(IDbContextFactory<MyDbContext> dbContextFactory)
         {
-            message = string.Empty;
+            _dbContextFactory = dbContextFactory;
+        }
+
+        public async Task<(bool isSuccess, string message)> UpDateRecipeUpAndLowLimitAsync(string stationNumber, List<MeasurementData> measureMentDatas)
+        {
+            string message = string.Empty;
             if (string.IsNullOrEmpty(stationNumber))
             {
                 message = "同步上下限数据的工位不能为空";
-                return Task.FromResult(false);
+                return (false, message);
             }
-            if(measureMentDatas.Count == 0)
+            if (measureMentDatas.Count == 0)
             {
                 message = "同步上下限数据的检测项不能为空";
-                return Task.FromResult(false);
+                return (false, message);
             }
-            using (MyDbContext db = new MyDbContext())
+            using (MyDbContext db = await _dbContextFactory.CreateDbContextAsync())
             {
                 try
                 {
                     var recipeItems = (from A in db.Stations
                                        join B in db.Recipes on A.Id equals B.StationId
                                        join C in db.RecipeItems on B.Id equals C.RecipeId
-                                       where A.StationNumber == stationNumber
+                                       where A.StationNumber == stationNumber && C.State == 1
                                        select C
                                        ).ToList();
 
                     if (recipeItems.Count == 0)
                     {
                         message = $"没有找到{stationNumber}工位的检测项配置";
-                        return Task.FromResult(false);
+                        return (false, message);
                     }
                     foreach (var item in recipeItems)
                     {
@@ -60,14 +68,14 @@ namespace Acquisition.Service
                             item.EditDateTime = DateTime.Now;
                         }
                     }
-                    db.SaveChangesAsync();
+                    await db.SaveChangesAsync();
                     message = "同步上下限数据成功";
-                    return Task.FromResult(true);
+                    return (true, message);
                 }
                 catch
                 {
                     message = "同步上下限数据失败";
-                    return Task.FromResult(false);
+                    return (false, message);
                 }
             }
         }

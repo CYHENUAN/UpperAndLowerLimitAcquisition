@@ -6,11 +6,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Acquisition.Model.MyDbContext;
 
 public partial class MyDbContext : DbContext
-{
-    public MyDbContext()
-    {
-    }
-
+{ 
     public MyDbContext(DbContextOptions<MyDbContext> options)
         : base(options)
     {
@@ -429,11 +425,7 @@ public partial class MyDbContext : DbContext
     public virtual DbSet<WorkOrderQualityRecord> WorkOrderQualityRecords { get; set; }
 
     public virtual DbSet<WorkOrder_Cell> WorkOrder_Cells { get; set; }
-
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Server=127.0.0.1;Database=MESDB_Acqu;User ID=sa;Password=sql;TrustServerCertificate=True");
-
+  
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<AGVDataConfig>(entity =>
