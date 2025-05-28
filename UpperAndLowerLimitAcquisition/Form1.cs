@@ -42,6 +42,7 @@ namespace UpperAndLowerLimitAcquisition
             // 启动压机任务线程
             StartPressTaskThread();
         }
+
         // 新增方法：启动任务线程
         private void StartPressTaskThread()
         {

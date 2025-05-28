@@ -110,7 +110,6 @@ namespace UpperAndLowerLimitAcquisition.Services
             GlobalData.SuccessCount = success;
             //将失败数记录到全局变量
             GlobalData.FailedCount = failed;
-
         }
     }
 }
