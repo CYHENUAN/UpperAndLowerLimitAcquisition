@@ -7,6 +7,13 @@
 			<EquipmentNameOne>压机一</EquipmentNameOne>
 		</CollectionClass>
 	</PressStation>
+	<PressMeasurementData>
+		<PressMeasurementData>
+			<StationName>A050</StationName>
+			<MeasurementOne>轴承压装压力|轴承压装深度</MeasurementOne>
+			<MeasurementTwo>转子压装压力|转子压装深度</MeasurementTwo>
+		</PressMeasurementData>
+	</PressMeasurementData>
 	<PressIsEnable>True</PressIsEnable>
 	<PressReadFrequency>12</PressReadFrequency>
 	<TightenStation>OPA010|OPA020</TightenStation>
@@ -14,6 +21,6 @@
 	<AirtightStation>OPA010|OPA020</AirtightStation>
 	<AirIsEnable>True</AirIsEnable>
 	<DeviceType>压机|拧紧枪|气密仪</DeviceType>
-	<LogPath />
+	<LogPath/>
 	<LogRetentionDays>30</LogRetentionDays>
 </ParamsSetting>

@@ -68,7 +68,7 @@ namespace UpperAndLowerLimitAcquisition.Services
                                     cancellationToken);
                                 
                                 //重试三次都失败直接返回，防止输出多余重试次数日志而后没有读取的下文;
-                                return;
+                                break;
                             }
                             else
                             {

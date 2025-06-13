@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Acquisition.Common;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.Design;
@@ -20,6 +21,8 @@ namespace UpperAndLowerLimitAcquisition.Model
         [Editor(typeof(EquipmentCollectionEditor), typeof(System.Drawing.Design.UITypeEditor))]
         [DisplayName("压机工站"), Category("压机设置")]
         public List<CollectionClass> PressStation { get; set; } = new List<CollectionClass>();
+        [DisplayName("压机检测项配置"), Category("压机设置")]
+        public List<PressMeasurementData> PressMeasurementData { get; set; } = new List<PressMeasurementData>();
         [DisplayName("是否启用压机采集"), Category("压机设置")]
         public IsEnable PressIsEnable { get; set; }
         [DisplayName("压机采集频率，默认12小时采集一次"), Category("压机设置")]

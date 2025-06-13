@@ -1,4 +1,8 @@
-﻿using System;
+﻿using Acquisition.Common;
+using Acquisition.IService;
+using MediatR;
+using Microsoft.VisualBasic;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -6,9 +10,6 @@ using System.Runtime;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Acquisition.Common;
-using Acquisition.IService;
-using MediatR;
 using UpperAndLowerLimitAcquisition.Helper;
 using UpperAndLowerLimitAcquisition.Log;
 using UpperAndLowerLimitAcquisition.Model;
@@ -45,7 +46,23 @@ namespace UpperAndLowerLimitAcquisition.Equipment.Press
                 var maindirname = dirinfo.Name.Replace(" ", "").Trim();
 
                 var stationNumber = _StationNuberMapp(maindirname);
-
+                //查找对应工位是否设置检测项名称
+                var measure = GlobalData.Params?.PressMeasurementData.FirstOrDefault(x => x.StationName == stationNumber);
+                //如果不为空则已设置的名称为准
+                var mesureStrs = new List<string?>();
+                if (measure != null)
+                {
+                    mesureStrs = new[]
+                    {
+                        measure.MeasurementOne,
+                        measure.MeasurementTwo,
+                        measure.MeasurementThree,
+                        measure.MeasurementFour,
+                        measure.MeasurementFive
+                    }
+                    .Where(s => !string.IsNullOrWhiteSpace(s))
+                    .ToList();
+                }
                 //压机日志输出
                 _logService.PressLog(0, $"{stationNumber}压力采集准备开始，采集设备：{maindirname}");
                           
@@ -155,19 +172,43 @@ namespace UpperAndLowerLimitAcquisition.Equipment.Press
                                             //获取压机输出文件序号，例如将 OK-A125-001 -> 转换成 1  代表压力，位移 为一的压机上线限值
                                             var i = int.Parse(Regex.Match(_file.Name, pattern).Groups[1].Value);
 
-                                            measurementDatas.Add(new MeasurementData()
+                                            if (i >= 0 && i <= mesureStrs.Count)
                                             {
-                                                MeasurementName = $"{i}压力",
-                                                MeasurementValueUSL = _v_uslfocre,
-                                                MeasurementValueLSL = _v_lslfocre,
+                                                var parts = mesureStrs[i-1]?.Split('|');
+                                                if (parts?.Length >= 2)
+                                                {
+                                                    measurementDatas.Add(new MeasurementData
+                                                    {
+                                                        MeasurementName = parts[0],
+                                                        MeasurementValueUSL = _v_uslfocre,
+                                                        MeasurementValueLSL = _v_lslfocre
+                                                    });
 
-                                            });
-                                            measurementDatas.Add(new MeasurementData()
+                                                    measurementDatas.Add(new MeasurementData
+                                                    {
+                                                        MeasurementName = parts[1],
+                                                        MeasurementValueUSL = _v_uslpostion,
+                                                        MeasurementValueLSL = _v_lslpostion
+                                                    });
+                                                }
+                                            }
+                                            else
                                             {
-                                                MeasurementName = $"{i}位移",
-                                                MeasurementValueUSL = _v_uslpostion,
-                                                MeasurementValueLSL = _v_lslpostion,
-                                            });
+                                                measurementDatas.Add(new MeasurementData()
+                                                {
+                                                    MeasurementName = $"{i}压力",
+                                                    MeasurementValueUSL = _v_uslfocre,
+                                                    MeasurementValueLSL = _v_lslfocre,
+
+                                                });
+                                                measurementDatas.Add(new MeasurementData()
+                                                {
+                                                    MeasurementName = $"{i}位移",
+                                                    MeasurementValueUSL = _v_uslpostion,
+                                                    MeasurementValueLSL = _v_lslpostion,
+                                                });
+                                            }
+                                           
                                             _logService.PressLog(0, $"读取到工位{stationNumber} -> 压力上下限:{_v_lslfocre}KN ~ {_v_uslfocre} KN 位移上下限: {_v_lslpostion}mm ~ {_v_uslpostion}mm");
                                         }
                                     }
@@ -197,7 +238,7 @@ namespace UpperAndLowerLimitAcquisition.Equipment.Press
                     var pressListData = CreatePressDetailDto(stationNumber, maindirname, _dirpath, AcquistionState.Sucess);
                     //新增成功数据到列表
                     InsertPressDetailDto(pressListData);
-                    await _mediator.Publish(new DataListViewNotification() { PanelId = "PressDataGridViewTable", PressDetailDtos = pressDetailDtos }, cancellationToken);                                     
+                    await _mediator.Publish(new DataListViewNotification() { PanelId = "PressDataGridViewTable", PressDetailDtos = pressDetailDtos }, cancellationToken);
                 }
                 else
                 {
@@ -285,11 +326,6 @@ namespace UpperAndLowerLimitAcquisition.Equipment.Press
                 pressDetailDtos.Add(pressDetailDto);
             }
         }
-
-
-
-
-
 
         private PressDetailDto CreatePressDetailDto(string station, string equipment, string source, AcquistionState state)
         {
